@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.Net.SDK">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace>TestTask</RootNamespace>
+    </PropertyGroup>
+
+</Project>

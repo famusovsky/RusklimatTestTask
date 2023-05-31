@@ -1,0 +1,9 @@
+# JetBrains IDEs generated files
+.idea
+
+# VS Code generated files
+.vscode
+
+# .NET generated files
+bin
+obj
