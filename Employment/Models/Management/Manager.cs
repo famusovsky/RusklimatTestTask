@@ -1,4 +1,4 @@
-namespace Employment.Models
+namespace Employment.Models.Management
 {
     /// <summary>
     /// Represents a manager.
@@ -8,7 +8,7 @@ namespace Employment.Models
         /// <summary>
         /// Represents count of processed calls.
         /// </summary>
-        public uint ProcessedCallsCount { get; protected set; } = 0;
+        public uint ProcessedCallsCount { get; set; } = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Manager"/> class.

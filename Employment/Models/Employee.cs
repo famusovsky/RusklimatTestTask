@@ -8,17 +8,17 @@ namespace Employment.Models
         /// <summary>
         /// Represents Id of the employee.
         /// </summary>
-        public uint Id { get; protected init; }
+        public uint Id { get; init; }
 
         /// <summary>
         /// Represents name of the employee.
         /// </summary>
-        public string Name { get; protected init; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Represents salary of the employee.
         /// </summary>
-        public uint Salary { get; protected set; }
+        public uint Salary { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Employee"/> class.

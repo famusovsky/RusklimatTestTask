@@ -1,8 +1,7 @@
-using Employment.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Employment.DataBase
+namespace Employment.DBHandling.Management
 {
     /// <summary>
     /// Represents a database context for managers employees.
@@ -16,7 +15,7 @@ namespace Employment.DataBase
         /// <summary>
         /// Gets or sets the managers in the database.
         /// </summary>
-        public DbSet<Manager> Managers { get; set; }
+        public DbSet<Models.Management.Manager> Managers { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmploymentContext"/> class.
