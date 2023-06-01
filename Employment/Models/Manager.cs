@@ -13,9 +13,14 @@ namespace Employment.Models
         /// <summary>
         /// Initializes a new instance of the <see cref="Manager"/> class.
         /// </summary>
+        /// <param name="id">Id of the manager.</param>
         /// <param name="name">Name of the manager.</param>
         /// <param name="salary">Salary of the manager.</param>
-        public Manager(string name, uint salary) : base(name, salary) { }
+        /// <param name="processedCallsCount">Count of processed calls.</param>
+        public Manager(uint id = 0, string name = "", uint salary = 0, uint processedCallsCount = 0) : base(id, name, salary)
+        {
+            ProcessedCallsCount = processedCallsCount;
+        }
 
         /// <summary>
         /// Process a call.

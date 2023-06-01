@@ -6,11 +6,6 @@ namespace Employment.Models
     public abstract class Employee
     {
         /// <summary>
-        /// Represents general count of employees.
-        /// </summary>
-        protected static uint employeesCount = 0;
-
-        /// <summary>
         /// Represents Id of the employee.
         /// </summary>
         public uint Id { get; protected init; }
@@ -23,18 +18,17 @@ namespace Employment.Models
         /// <summary>
         /// Represents salary of the employee.
         /// </summary>
-        public uint Salary { get; protected set; } = 0;
+        public uint Salary { get; protected set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Employee"/> class.
         /// </summary>
+        /// <param name="id">Id of the employee.</param>
         /// <param name="name">Name of the employee.</param>
         /// <param name="salary">Salary of the employee.</param>
-        public Employee(string name, uint salary = 0)
+        public Employee(uint id = 0, string name = "", uint salary = 0)
         {
-            employeesCount++;
-
-            Id = employeesCount;
+            Id = id;
             Name = name;
             Salary = salary;
         }
