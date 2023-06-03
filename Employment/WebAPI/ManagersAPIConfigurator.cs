@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
-using Employment.DBHandling.Management;
-using Employment.Models.Management;
+using Employment.DBHandling.Repositories;
+using Employment.Models;
 
-namespace Employment.WebAPI.Management
+namespace Employment.WebAPI
 {
     /// <summary>
     /// This class is responsible for configuring the API endpoints for the Managers module ("*/managers").
@@ -18,8 +18,6 @@ namespace Employment.WebAPI.Management
         /// <param name="repository">The database repository.</param>
         public static void Configure(IEndpointRouteBuilder routeBuilder, IManagementRepository repository)
         {
-            routeBuilder.MapGet("/", () => new { Message = "Hello, World!" });
-
             ConfigureManagersCRUD(routeBuilder, repository);
         }
 
@@ -44,11 +42,11 @@ namespace Employment.WebAPI.Management
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
-            routeBuilder.MapGet("/managers/{id}", (uint id) =>
+            routeBuilder.MapGet("/managers/{id}", (int id) =>
             {
                 try
                 {
@@ -62,7 +60,43 @@ namespace Employment.WebAPI.Management
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
+                }
+            });
+            
+            routeBuilder.MapGet("/managers/bonuses", () =>
+            {
+                try
+                {
+                    var bonuses = repository.GetBonusesHistory();
+
+                    return Results.Json(bonuses);
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
+                }
+                catch (System.Exception e)
+                {
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
+                }
+            });
+
+            routeBuilder.MapGet("/managers/bonuses/{id}", (int id) =>
+            {
+                try
+                {
+                    var bonuses = repository.GetBonusesHistory(id);
+
+                    return Results.Json(bonuses);
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
+                }
+                catch (System.Exception e)
+                {
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
@@ -80,11 +114,29 @@ namespace Employment.WebAPI.Management
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
-            routeBuilder.MapPut("/managers/{id}", (uint id, Manager manager) =>
+            routeBuilder.MapPost("/managers/{id}/call", (int id) =>
+            {
+                try
+                {
+                    repository.ApplyCallProcessing(id);
+
+                    return Results.Ok(new { message = $"Manager {id} processed call successfully." });
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
+                }
+                catch (System.Exception e)
+                {
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
+                }
+            });
+
+            routeBuilder.MapPut("/managers/{id}", (int id, Manager manager) =>
             {
                 try
                 {
@@ -98,11 +150,11 @@ namespace Employment.WebAPI.Management
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
-            routeBuilder.MapDelete("/managers/{id}", (uint id) =>
+            routeBuilder.MapDelete("/managers/{id}", (int id) =>
             {
                 try
                 {
@@ -116,7 +168,7 @@ namespace Employment.WebAPI.Management
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
         }

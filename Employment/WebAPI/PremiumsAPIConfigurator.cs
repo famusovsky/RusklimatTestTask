@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Http;
-using Employment.DBHandling;
+using Employment.DBHandling.Repositories;
 using Employment.Models;
 
 namespace Employment.WebAPI
@@ -42,11 +42,11 @@ namespace Employment.WebAPI
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
-            routeBuilder.MapGet("/premiums/{id}", (uint id) =>
+            routeBuilder.MapGet("/premiums/{id}", (int id) =>
             {
                 try
                 {
@@ -60,7 +60,7 @@ namespace Employment.WebAPI
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
@@ -78,7 +78,7 @@ namespace Employment.WebAPI
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
@@ -96,11 +96,11 @@ namespace Employment.WebAPI
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
-            routeBuilder.MapPut("/premiums/{id}", (uint id, Premium premium) =>
+            routeBuilder.MapPut("/premiums/{id}", (int id, Premium premium) =>
             {
                 try
                 {
@@ -114,11 +114,11 @@ namespace Employment.WebAPI
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
 
-            routeBuilder.MapDelete("/premiums/{id}", (uint id) =>
+            routeBuilder.MapDelete("/premiums/{id}", (int id) =>
             {
                 try
                 {
@@ -132,7 +132,7 @@ namespace Employment.WebAPI
                 }
                 catch (System.Exception e)
                 {
-                    return Results.BadRequest(new { message = e.Message });
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
         }

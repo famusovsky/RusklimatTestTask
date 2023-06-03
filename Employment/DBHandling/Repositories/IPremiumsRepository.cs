@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Employment.Models;
 
-namespace Employment.DBHandling
+namespace Employment.DBHandling.Repositories
 {
     /// <summary>
     /// Represents an interface for a premiums repository.
@@ -23,7 +23,7 @@ namespace Employment.DBHandling
         /// Gets a premium by id.
         /// </summary>
         /// <param name="id">The id of the premium to get.</param>
-        public Premium GetPremium(uint id);
+        public Premium GetPremium(int id);
 
         /// <summary>
         /// Adds a premium.
@@ -36,12 +36,12 @@ namespace Employment.DBHandling
         /// </summary>
         /// <param name="id">The id of the premium to update.</param>
         /// <param name="premium">The updated premium.</param>
-        public void UpdatePremium(uint id, Premium premium);
+        public void UpdatePremium(int id, Premium premium);
 
         /// <summary>
         /// Deletes a premium.
         /// </summary>
         /// <param name="id">The id of the premium to delete.</param>
-        public void DeletePremium(uint id);
+        public void DeletePremium(int id);
     }
 }

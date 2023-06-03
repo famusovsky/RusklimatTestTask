@@ -2,7 +2,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Employment.Models;
 
-namespace Employment.DBHandling
+namespace Employment.DBHandling.Repositories
 {
     /// <summary>
     /// Represents a premiums repository.
@@ -12,12 +12,12 @@ namespace Employment.DBHandling
         /// <summary>
         /// The DataBase context.
         /// </summary>
-        private readonly PremiumsDbContext _context;
+        private readonly EmploymentDbContext _context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PremiumsRepository"/> class.
         /// </summary>
-        public PremiumsRepository(PremiumsDbContext context)
+        public PremiumsRepository(EmploymentDbContext context)
         {
             _context = context;
         }
@@ -29,7 +29,7 @@ namespace Employment.DBHandling
             {
                 throw new System.ArgumentException("No premiums found.");
             }
-            
+
             return premiums;
         }
 
@@ -40,11 +40,11 @@ namespace Employment.DBHandling
             {
                 throw new System.ArgumentException($"No premiums found for employee with id {employeesId}.");
             }
-            
+
             return premiums;
         }
 
-        public Premium GetPremium(uint id)
+        public Premium GetPremium(int id)
         {
             var premium = _context.Premiums.Find(id);
             if (premium == null)
@@ -55,19 +55,22 @@ namespace Employment.DBHandling
             return premium;
         }
 
-        public void AddPremium(Premium Premium)
+        public void AddPremium(Premium premium)
         {
-            var premiumWithSameId = _context.Premiums.Find(Premium.Id);
-            if (premiumWithSameId != null)
+            if (premium.Id != 0)
             {
-                throw new System.ArgumentException($"Premium with id {Premium.Id} already exists.");
+                var premiumWithSameId = _context.Premiums.Find(premium.Id);
+                if (premiumWithSameId != null)
+                {
+                    throw new System.ArgumentException($"Premium with id {premium.Id} already exists.");
+                }
             }
 
-            _context.Premiums.Add(Premium);
+            _context.Premiums.Add(premium);
             _context.SaveChanges();
         }
 
-        public void UpdatePremium(uint id, Premium Premium)
+        public void UpdatePremium(int id, Premium premium)
         {
             var premiumToUpdate = _context.Premiums.Find(id);
             if (premiumToUpdate == null)
@@ -75,13 +78,13 @@ namespace Employment.DBHandling
                 throw new System.ArgumentException($"Premium with id {id} not found.");
             }
 
-            premiumToUpdate.EmployeeId = Premium.EmployeeId;
-            premiumToUpdate.Volume = Premium.Volume;
+            premiumToUpdate.EmployeeId = premium.EmployeeId;
+            premiumToUpdate.Volume = premium.Volume;
 
             _context.SaveChanges();
         }
 
-        public void DeletePremium(uint id)
+        public void DeletePremium(int id)
         {
             var PremiumToDelete = _context.Premiums.Find(id);
             if (PremiumToDelete == null)

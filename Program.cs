@@ -1,11 +1,12 @@
+using System;
 using System.IO;
 using Employment.WebAPI;
 using Employment.DBHandling;
-using Employment.WebAPI.Management;
-using Employment.DBHandling.Management;
+using Employment.DBHandling.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Routing;
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var configuration = new ConfigurationBuilder()
     .SetBasePath(Directory.GetCurrentDirectory())
@@ -18,26 +19,20 @@ var app = WebApplication
 
 app.MapGet("/", () => "Hello World!");
 
-ConfigureManagement(configuration, app);
-
-ConfigurePremiums(configuration, app);
-
-app.Run();
-
-void ConfigureManagement(IConfiguration configuration, IEndpointRouteBuilder app)
+try
 {
-    var managementDbContext = new ManagementDbContext(configuration);
+    var employmentDbContext = new EmploymentDbContext(configuration);
 
-    var managementRepository = new ManagementRepository(managementDbContext);
+    var managementRepository = new ManagementRepository(employmentDbContext);
+    var premiumsRepository = new PremiumsRepository(employmentDbContext);
 
     ManagersAPIConfigurator.Configure(app, managementRepository);
-}
-
-void ConfigurePremiums(IConfiguration configuration, IEndpointRouteBuilder app)
-{
-    var premiumsContext = new PremiumsDbContext(configuration);
-
-    var premiumsRepository = new PremiumsRepository(premiumsContext);
-
     PremiumsAPIConfigurator.Configure(app, premiumsRepository);
 }
+catch(System.Exception e)
+{
+    System.Console.WriteLine("Error while configuring API: " + e.Message);
+    return;
+}
+
+app.Run();

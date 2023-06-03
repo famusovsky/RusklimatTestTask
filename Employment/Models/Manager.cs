@@ -1,34 +1,37 @@
-namespace Employment.Models.Management
+namespace Employment.Models
 {
     /// <summary>
     /// Represents a manager.
     /// </summary>
-    public class Manager : Employee
+    public class Manager
     {
+        /// <summary>
+        /// Represents Id of the employee.
+        /// </summary>
+        public int Id { get; set; } = 0;
+
+        /// <summary>
+        /// Represents name of the employee.
+        /// </summary>
+        public required string Name { get; set; }
+
+        /// <summary>
+        /// Represents salary of the employee.
+        /// </summary>
+        public uint Salary { get; set; } = 0;
+
         /// <summary>
         /// Represents count of processed calls.
         /// </summary>
-        public required uint ProcessedCallsCount { get; set; } = 0;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Manager"/> class.
-        /// </summary>
-        /// <param name="id">Id of the manager.</param>
-        /// <param name="name">Name of the manager.</param>
-        /// <param name="salary">Salary of the manager.</param>
-        /// <param name="processedCallsCount">Count of processed calls.</param>
-        public Manager(uint id = 0, string name = "", uint salary = 0, uint processedCallsCount = 0) : base(id, name, salary)
-        {
-            ProcessedCallsCount = processedCallsCount;
-        }
+        public uint ProcessedCallsCount { get; set; } = 0;
 
         /// <summary>
         /// Process a call.
         /// </summary>
-        public void ProcessCall()
+        public Bonus ProcessCall()
         {
             ProcessedCallsCount++;
-            ApplyBonus(GetBonusCategory(ProcessedCallsCount));
+            return ApplyBonus(GetBonusCategory(ProcessedCallsCount));
         }
 
         /// <summary>
@@ -48,9 +51,15 @@ namespace Employment.Models.Management
             }
         }
 
-        public override void ApplyBonus(BonusCategory bonus)
+        /// <summary>
+        /// Apply bonus to the employee.
+        /// </summary>
+        /// <param name="bonus">Bonus category.</param>
+        public Bonus ApplyBonus(BonusCategory bonusCategory)
         {
-            switch (bonus)
+            var bonus = new Bonus { Category = bonusCategory, EmployeeId = (uint)Id };
+
+            switch (bonus.Category)
             {
                 case BonusCategory.Low:
                     Salary += 100;
@@ -62,6 +71,8 @@ namespace Employment.Models.Management
                     Salary += 300;
                     break;
             }
+
+            return bonus;
         }
     }
 }

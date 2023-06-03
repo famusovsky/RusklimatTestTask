@@ -5,14 +5,18 @@ using Employment.Models;
 namespace Employment.DBHandling
 {
     /// <summary>
-    /// Represents a database context for premiums.
+    /// Represents a database context for managers.
     /// </summary>
-    public class PremiumsDbContext : DbContext
+    public class EmploymentDbContext : DbContext
     {
         /// <summary>
         /// The configuration.
         /// </summary>
         private readonly IConfiguration _configuration;
+        /// <summary>
+        /// Gets or sets the managers in the database.
+        /// </summary>
+        public DbSet<Manager> Managers { get; set; }
 
         /// <summary>
         /// Gets or sets the premiums in the database.
@@ -20,14 +24,21 @@ namespace Employment.DBHandling
         public DbSet<Premium> Premiums { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PremiumsDbContext"/> class.
+        /// Gets or sets the bonuses in the database.
         /// </summary>
-        public PremiumsDbContext(IConfiguration configuration)
+        public DbSet<Bonus> Bonuses { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmploymentDbContext"/> class.
+        /// </summary>
+        public EmploymentDbContext(IConfiguration configuration)
         {
             _configuration = configuration;
             Database.EnsureCreated();
 
+            Managers = Set<Manager>();
             Premiums = Set<Premium>();
+            Bonuses = Set<Bonus>();
         }
 
         /// <summary>
