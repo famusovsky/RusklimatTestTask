@@ -11,12 +11,14 @@ namespace Employment.DBHandling.Repositories
         /// <summary>
         /// Gets all the managers.
         /// </summary>
+        /// <returns>All the managers.</returns>
         public List<Manager> GetManagers();
 
         /// <summary>
         /// Gets a manager by id.
         /// </summary>
         /// <param name="id">The id of the manager to get.</param>
+        /// <returns>The manager.</returns>
         public Manager GetManager(int id);
 
         /// <summary>
@@ -39,6 +41,13 @@ namespace Employment.DBHandling.Repositories
         public void DeleteManager(int id);
 
         /// <summary>
+        /// Gets the salary of a manager.
+        /// </summary>
+        /// <param name="id">The id of the manager to get the salary of.</param>
+        /// <returns>The salary of the manager.</returns>
+        public uint GetManagerSalary(int id);
+
+        /// <summary>
         /// Applies call processing to a manager.
         /// </summary>
         /// <param name="id">The id of the manager to apply call processing to.</param>
@@ -47,12 +56,14 @@ namespace Employment.DBHandling.Repositories
         /// <summary>
         /// Gets the bonuses history.
         /// </summary>
+        /// <returns>The bonuses history.</returns>
         public List<Bonus> GetBonusesHistory();
 
         /// <summary>
         /// Gets the bonuses history of a manager.
         /// </summary>
         /// <param name="id">The id of the manager to get the bonuses history of.</param>
+        /// <returns>The bonuses history.</returns>
         public List<Bonus> GetBonusesHistory(int id);
     }
 }

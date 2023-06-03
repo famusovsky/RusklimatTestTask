@@ -85,6 +85,16 @@ namespace Employment.DBHandling.Repositories
             _context.SaveChanges();
         }
 
+        public uint GetManagerSalary(int id) {
+            var manager = _context.Managers.Find(id);
+            if (manager == null)
+            {
+                throw new System.ArgumentException($"Manager with id {id} not found.");
+            }
+
+            return manager.Salary;
+        }
+
         public void ApplyCallProcessing(int id)
         {
             var manager = _context.Managers.Find(id);

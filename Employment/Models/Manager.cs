@@ -28,6 +28,7 @@ namespace Employment.Models
         /// <summary>
         /// Process a call.
         /// </summary>
+        /// <returns>Bonus for the manager.</returns>
         public Bonus ProcessCall()
         {
             ProcessedCallsCount++;
@@ -38,6 +39,7 @@ namespace Employment.Models
         /// Get bonus category for the manager.
         /// </summary>
         /// </param name="processedCallsCount">Count of processed calls.</param>
+        /// <returns>Bonus category.</returns>
         public static BonusCategory GetBonusCategory(uint processedCallsCount)
         {
             switch (processedCallsCount)
@@ -55,6 +57,7 @@ namespace Employment.Models
         /// Apply bonus to the employee.
         /// </summary>
         /// <param name="bonus">Bonus category.</param>
+        /// <returns>Bonus for the manager.</returns>
         public Bonus ApplyBonus(BonusCategory bonusCategory)
         {
             var bonus = new Bonus { Category = bonusCategory, EmployeeId = (uint)Id };

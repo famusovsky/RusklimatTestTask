@@ -63,7 +63,25 @@ namespace Employment.WebAPI
                     return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
                 }
             });
-            
+
+            routeBuilder.MapGet("/managers/{id}/salary", (int id) =>
+            {
+                try
+                {
+                    var salary = repository.GetManagerSalary(id);
+
+                    return Results.Json(new { id = id, salary = salary });
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
+                }
+                catch (System.Exception e)
+                {
+                    return Results.BadRequest(new { message = e.Message + " " + e.InnerException?.Message });
+                }
+            });
+
             routeBuilder.MapGet("/managers/bonuses", () =>
             {
                 try

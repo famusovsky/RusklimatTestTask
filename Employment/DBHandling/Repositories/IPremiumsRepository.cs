@@ -11,18 +11,21 @@ namespace Employment.DBHandling.Repositories
         /// <summary>
         /// Gets all the premiums.
         /// </summary>
+        /// <returns>All the premiums.</returns>
         public List<Premium> GetPremiums();
 
         /// <summary>
         /// Gets premiums by employees id.
         /// </summary>
         /// <param name="employeesId">The id of the employee who got the premium.</param>
+        /// <returns>The premiums.</returns>
         public List<Premium> GetPremiums(uint employeesId);
 
         /// <summary>
         /// Gets a premium by id.
         /// </summary>
         /// <param name="id">The id of the premium to get.</param>
+        /// <returns>The premium.</returns>
         public Premium GetPremium(int id);
 
         /// <summary>
