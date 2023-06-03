@@ -1,38 +1,23 @@
 using System;
-using System.IO;
-using Employment.WebAPI;
 using Employment.DBHandling;
 using Employment.DBHandling.Repositories;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json")
-    .Build();
+var builder = WebApplication.CreateBuilder(args);
 
-var app = WebApplication
-    .CreateBuilder()
-    .Build();
+builder.Services.AddDbContext<EmploymentDbContext>();
 
-app.MapGet("/", () => "Hello World!");
+builder.Services.AddScoped<IManagementRepository, ManagementRepository>();
+builder.Services.AddScoped<IPremiumsRepository, PremiumsRepository>();
 
-try
-{
-    var employmentDbContext = new EmploymentDbContext(configuration);
+builder.Services.AddControllers();
 
-    var managementRepository = new ManagementRepository(employmentDbContext);
-    var premiumsRepository = new PremiumsRepository(employmentDbContext);
+var app = builder.Build();
 
-    ManagersAPIConfigurator.Configure(app, managementRepository);
-    PremiumsAPIConfigurator.Configure(app, premiumsRepository);
-}
-catch(System.Exception e)
-{
-    System.Console.WriteLine("Error while configuring API: " + e.Message);
-    return;
-}
+app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
