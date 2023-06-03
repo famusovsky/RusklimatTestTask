@@ -100,7 +100,7 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/managers/bonuses/{id}", async (int id) =>
+            routeBuilder.MapGet("/managers/{id}/bonuses", async (int id) =>
             {
                 try
                 {

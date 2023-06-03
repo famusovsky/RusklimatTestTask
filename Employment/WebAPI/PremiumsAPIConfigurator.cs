@@ -32,9 +32,9 @@ namespace Employment.WebAPI
             {
                 try
                 {
-                    var Premiums = await repository.GetPremiums();
+                    var premiums = await repository.GetPremiums();
 
-                    return Results.Json(Premiums);
+                    return Results.Json(premiums);
                 }
                 catch (System.ArgumentException e)
                 {
