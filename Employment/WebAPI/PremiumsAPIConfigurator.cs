@@ -28,11 +28,11 @@ namespace Employment.WebAPI
         /// <param name="repository">The premiums repository.</param>
         public static void ConfigurePremiumsCRUD(IEndpointRouteBuilder routeBuilder, IPremiumsRepository repository)
         {
-            routeBuilder.MapGet("/premiums", () =>
+            routeBuilder.MapGet("/premiums", async () =>
             {
                 try
                 {
-                    var Premiums = repository.GetPremiums();
+                    var Premiums = await repository.GetPremiums();
 
                     return Results.Json(Premiums);
                 }
@@ -46,11 +46,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/premiums/{id}", (int id) =>
+            routeBuilder.MapGet("/premiums/{id}", async (int id) =>
             {
                 try
                 {
-                    var premium = repository.GetPremium(id);
+                    var premium = await repository.GetPremium(id);
 
                     return Results.Json(premium);
                 }
@@ -64,11 +64,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/premiums/e/{id}", (uint id) =>
+            routeBuilder.MapGet("/premiums/e/{id}", async (uint id) =>
             {
                 try
                 {
-                    var premiums = repository.GetPremiums(id);
+                    var premiums = await repository.GetPremiums(id);
 
                     return Results.Json(premiums);
                 }
@@ -82,11 +82,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapPost("/premiums", (Premium premium) =>
+            routeBuilder.MapPost("/premiums", async (Premium premium) =>
             {
                 try
                 {
-                    repository.AddPremium(premium);
+                    await repository.AddPremium(premium);
 
                     return Results.Created($"/premiums/{premium.Id}", new { Message = $"Premium {premium.Id} created successfully." });
                 }
@@ -100,11 +100,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapPut("/premiums/{id}", (int id, Premium premium) =>
+            routeBuilder.MapPut("/premiums/{id}", async (int id, Premium premium) =>
             {
                 try
                 {
-                    repository.UpdatePremium(id, premium);
+                    await repository.UpdatePremium(id, premium);
 
                     return Results.Accepted($"/premiums/{id}", new { Message = $"Premium {id} updated successfully." });
                 }
@@ -118,11 +118,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapDelete("/premiums/{id}", (int id) =>
+            routeBuilder.MapDelete("/premiums/{id}", async (int id) =>
             {
                 try
                 {
-                    repository.DeletePremium(id);
+                    await repository.DeletePremium(id);
 
                     return Results.Accepted($"/premiums/{id}", new { Message = $"Premium {id} deleted successfully." });
                 }

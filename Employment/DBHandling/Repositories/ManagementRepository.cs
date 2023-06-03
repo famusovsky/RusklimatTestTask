@@ -1,5 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Employment.Models;
 
 namespace Employment.DBHandling.Repositories
@@ -22,9 +24,9 @@ namespace Employment.DBHandling.Repositories
             _context = context;
         }
 
-        public List<Manager> GetManagers()
+        public async Task<List<Manager>> GetManagers()
         {
-            var managers = _context.Managers.ToList();
+            var managers = await _context.Managers.ToListAsync();
             if (managers.Count == 0)
             {
                 throw new System.ArgumentException("No managers found.");
@@ -33,9 +35,9 @@ namespace Employment.DBHandling.Repositories
             return managers;
         }
 
-        public Manager GetManager(int id)
+        public async Task<Manager> GetManager(int id)
         {
-            var manager = _context.Managers.Find(id);
+            var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
             {
                 throw new System.ArgumentException($"Manager with id {id} not found.");
@@ -44,24 +46,25 @@ namespace Employment.DBHandling.Repositories
             return manager;
         }
 
-        public void AddManager(Manager manager)
+        public async Task AddManager(Manager manager)
         {
             if (manager.Id != 0)
             {
-                var managerWithSameId = _context.Managers.Find(manager.Id);
+                var managerWithSameId = await _context.Managers.FindAsync(manager.Id);
                 if (managerWithSameId != null)
                 {
                     throw new System.ArgumentException($"Manager with id {manager.Id} already exists.");
                 }
             }
 
-            _context.Managers.Add(manager);
-            _context.SaveChanges();
+            await _context.Managers.AddAsync(manager);
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdateManager(int id, Manager manager)
+        // TODO: update not all of the manager's properties, but only needed
+        public async Task UpdateManager(int id, Manager manager)
         {
-            var managerToUpdate = _context.Managers.Find(id);
+            var managerToUpdate = await _context.Managers.FindAsync(id);
             if (managerToUpdate == null)
             {
                 throw new System.ArgumentException($"Manager with id {id} not found.");
@@ -70,23 +73,24 @@ namespace Employment.DBHandling.Repositories
             managerToUpdate.Name = manager.Name;
             managerToUpdate.Salary = manager.Salary;
             managerToUpdate.ProcessedCallsCount = manager.ProcessedCallsCount;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeleteManager(int id)
+        public async Task DeleteManager(int id)
         {
-            var managerToDelete = _context.Managers.Find(id);
+            var managerToDelete = await _context.Managers.FindAsync(id);
             if (managerToDelete == null)
             {
                 throw new System.ArgumentException($"Manager with id {id} not found.");
             }
 
             _context.Managers.Remove(managerToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public uint GetManagerSalary(int id) {
-            var manager = _context.Managers.Find(id);
+        public async Task<uint> GetManagerSalary(int id)
+        {
+            var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
             {
                 throw new System.ArgumentException($"Manager with id {id} not found.");
@@ -95,22 +99,22 @@ namespace Employment.DBHandling.Repositories
             return manager.Salary;
         }
 
-        public void ApplyCallProcessing(int id)
+        public async Task ApplyCallProcessing(int id)
         {
-            var manager = _context.Managers.Find(id);
+            var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
             {
                 throw new System.ArgumentException($"Manager with id {id} not found.");
             }
 
-            var bonus = manager.ProcessCall();
-            _context.Bonuses.Add(bonus);
-            _context.SaveChanges();
+            var bonus = await manager.ProcessCallAsync();
+            await _context.Bonuses.AddAsync(bonus);
+            await _context.SaveChangesAsync();
         }
 
-        public List<Bonus> GetBonusesHistory()
+        public async Task<List<Bonus>> GetBonusesHistory()
         {
-            var bonuses = _context.Bonuses.ToList();
+            var bonuses = await _context.Bonuses.ToListAsync();
             if (bonuses.Count == 0)
             {
                 throw new System.ArgumentException("No bonuses found.");
@@ -119,9 +123,10 @@ namespace Employment.DBHandling.Repositories
             return bonuses;
         }
 
-        public List<Bonus> GetBonusesHistory(int id)
+        public async Task<List<Bonus>> GetBonusesHistory(int id)
         {
-            var bonuses = _context.Bonuses.ToList().Where(bonus => bonus.EmployeeId == id).ToList();
+            var allBonuses = await _context.Bonuses.ToListAsync();
+            var bonuses = allBonuses.Where(bonus => bonus.EmployeeId == id).ToList();
             if (bonuses.Count == 0)
             {
                 throw new System.ArgumentException("No bonuses found.");

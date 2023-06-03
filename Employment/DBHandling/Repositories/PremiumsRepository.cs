@@ -1,5 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Employment.Models;
 
 namespace Employment.DBHandling.Repositories
@@ -22,9 +24,9 @@ namespace Employment.DBHandling.Repositories
             _context = context;
         }
 
-        public List<Premium> GetPremiums()
+        public async Task<List<Premium>> GetPremiums()
         {
-            var premiums = _context.Premiums.ToList();
+            var premiums = await _context.Premiums.ToListAsync();
             if (premiums.Count == 0)
             {
                 throw new System.ArgumentException("No premiums found.");
@@ -33,9 +35,9 @@ namespace Employment.DBHandling.Repositories
             return premiums;
         }
 
-        public List<Premium> GetPremiums(uint employeesId)
+        public async Task<List<Premium>> GetPremiums(uint employeesId)
         {
-            var premiums = _context.Premiums.Where(premium => premium.EmployeeId == employeesId).ToList();
+            var premiums = await _context.Premiums.Where(premium => premium.EmployeeId == employeesId).ToListAsync();
             if (premiums.Count == 0)
             {
                 throw new System.ArgumentException($"No premiums found for employee with id {employeesId}.");
@@ -44,9 +46,9 @@ namespace Employment.DBHandling.Repositories
             return premiums;
         }
 
-        public Premium GetPremium(int id)
+        public async Task<Premium> GetPremium(int id)
         {
-            var premium = _context.Premiums.Find(id);
+            var premium = await _context.Premiums.FindAsync(id);
             if (premium == null)
             {
                 throw new System.ArgumentException($"Premium with id {id} not found.");
@@ -55,24 +57,24 @@ namespace Employment.DBHandling.Repositories
             return premium;
         }
 
-        public void AddPremium(Premium premium)
+        public async Task AddPremium(Premium premium)
         {
             if (premium.Id != 0)
             {
-                var premiumWithSameId = _context.Premiums.Find(premium.Id);
+                var premiumWithSameId = await _context.Premiums.FindAsync(premium.Id);
                 if (premiumWithSameId != null)
                 {
                     throw new System.ArgumentException($"Premium with id {premium.Id} already exists.");
                 }
             }
 
-            _context.Premiums.Add(premium);
-            _context.SaveChanges();
+            await _context.Premiums.AddAsync(premium);
+            await _context.SaveChangesAsync();
         }
 
-        public void UpdatePremium(int id, Premium premium)
+        public async Task UpdatePremium(int id, Premium premium)
         {
-            var premiumToUpdate = _context.Premiums.Find(id);
+            var premiumToUpdate = await _context.Premiums.FindAsync(id);
             if (premiumToUpdate == null)
             {
                 throw new System.ArgumentException($"Premium with id {id} not found.");
@@ -81,19 +83,19 @@ namespace Employment.DBHandling.Repositories
             premiumToUpdate.EmployeeId = premium.EmployeeId;
             premiumToUpdate.Volume = premium.Volume;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void DeletePremium(int id)
+        public async Task DeletePremium(int id)
         {
-            var PremiumToDelete = _context.Premiums.Find(id);
+            var PremiumToDelete = await _context.Premiums.FindAsync(id);
             if (PremiumToDelete == null)
             {
                 throw new System.ArgumentException($"Premium with id {id} not found.");
             }
 
             _context.Premiums.Remove(PremiumToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

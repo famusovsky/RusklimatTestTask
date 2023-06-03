@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Employment.Models;
 
 namespace Employment.DBHandling.Repositories
@@ -12,39 +13,39 @@ namespace Employment.DBHandling.Repositories
         /// Gets all the premiums.
         /// </summary>
         /// <returns>All the premiums.</returns>
-        public List<Premium> GetPremiums();
+        public Task<List<Premium>> GetPremiums();
 
         /// <summary>
         /// Gets premiums by employees id.
         /// </summary>
         /// <param name="employeesId">The id of the employee who got the premium.</param>
         /// <returns>The premiums.</returns>
-        public List<Premium> GetPremiums(uint employeesId);
+        public Task<List<Premium>> GetPremiums(uint employeesId);
 
         /// <summary>
         /// Gets a premium by id.
         /// </summary>
         /// <param name="id">The id of the premium to get.</param>
         /// <returns>The premium.</returns>
-        public Premium GetPremium(int id);
+        public Task<Premium> GetPremium(int id);
 
         /// <summary>
         /// Adds a premium.
         /// </summary>
         /// <param name="premium">The premium to add.</param>
-        public void AddPremium(Premium premium);
+        public Task AddPremium(Premium premium);
 
         /// <summary>
         /// Updates a premium by id.
         /// </summary>
         /// <param name="id">The id of the premium to update.</param>
         /// <param name="premium">The updated premium.</param>
-        public void UpdatePremium(int id, Premium premium);
+        public Task UpdatePremium(int id, Premium premium);
 
         /// <summary>
         /// Deletes a premium.
         /// </summary>
         /// <param name="id">The id of the premium to delete.</param>
-        public void DeletePremium(int id);
+        public Task DeletePremium(int id);
     }
 }

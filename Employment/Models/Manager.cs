@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Employment.Models
 {
     /// <summary>
@@ -26,16 +28,6 @@ namespace Employment.Models
         public uint ProcessedCallsCount { get; set; } = 0;
 
         /// <summary>
-        /// Process a call.
-        /// </summary>
-        /// <returns>Bonus for the manager.</returns>
-        public Bonus ProcessCall()
-        {
-            ProcessedCallsCount++;
-            return ApplyBonus(GetBonusCategory(ProcessedCallsCount));
-        }
-
-        /// <summary>
         /// Get bonus category for the manager.
         /// </summary>
         /// </param name="processedCallsCount">Count of processed calls.</param>
@@ -51,6 +43,28 @@ namespace Employment.Models
                 default:
                     return BonusCategory.High;
             }
+        }
+
+        /// <summary>
+        /// Process a call.
+        /// </summary>
+        /// <returns>Bonus for the manager.</returns>
+        public Bonus ProcessCall()
+        {
+            ProcessedCallsCount++;
+            var bonusCategory = GetBonusCategory(ProcessedCallsCount);
+            return ApplyBonus(bonusCategory);
+        }
+
+        /// <summary>
+        /// Process a call async.
+        /// </summary>
+        /// <returns>Bonus for the manager.</returns>
+        public async Task<Bonus> ProcessCallAsync()
+        {
+            ProcessedCallsCount++;
+            var bonusCategory = GetBonusCategory(ProcessedCallsCount);
+            return await Task.Run(() => ApplyBonus(bonusCategory));
         }
 
         /// <summary>

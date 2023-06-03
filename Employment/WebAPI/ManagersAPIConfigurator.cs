@@ -28,11 +28,11 @@ namespace Employment.WebAPI
         /// <param name="repository">The managers repository.</param>
         public static void ConfigureManagersCRUD(IEndpointRouteBuilder routeBuilder, IManagementRepository repository)
         {
-            routeBuilder.MapGet("/managers", () =>
+            routeBuilder.MapGet("/managers", async () =>
             {
                 try
                 {
-                    var managers = repository.GetManagers();
+                    var managers = await repository.GetManagers();
 
                     return Results.Json(managers);
                 }
@@ -46,11 +46,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/managers/{id}", (int id) =>
+            routeBuilder.MapGet("/managers/{id}", async (int id) =>
             {
                 try
                 {
-                    var manager = repository.GetManager(id);
+                    var manager = await repository.GetManager(id);
 
                     return Results.Json(manager);
                 }
@@ -64,11 +64,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/managers/{id}/salary", (int id) =>
+            routeBuilder.MapGet("/managers/{id}/salary", async (int id) =>
             {
                 try
                 {
-                    var salary = repository.GetManagerSalary(id);
+                    var salary = await repository.GetManagerSalary(id);
 
                     return Results.Json(new { id = id, salary = salary });
                 }
@@ -82,11 +82,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/managers/bonuses", () =>
+            routeBuilder.MapGet("/managers/bonuses", async () =>
             {
                 try
                 {
-                    var bonuses = repository.GetBonusesHistory();
+                    var bonuses = await repository.GetBonusesHistory();
 
                     return Results.Json(bonuses);
                 }
@@ -100,11 +100,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapGet("/managers/bonuses/{id}", (int id) =>
+            routeBuilder.MapGet("/managers/bonuses/{id}", async (int id) =>
             {
                 try
                 {
-                    var bonuses = repository.GetBonusesHistory(id);
+                    var bonuses = await repository.GetBonusesHistory(id);
 
                     return Results.Json(bonuses);
                 }
@@ -118,11 +118,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapPost("/managers", (Manager manager) =>
+            routeBuilder.MapPost("/managers", async (Manager manager) =>
             {
                 try
                 {
-                    repository.AddManager(manager);
+                    await repository.AddManager(manager);
 
                     return Results.Created($"/managers/{manager.Id}", new { Message = $"Manager {manager.Id} created successfully." });
                 }
@@ -136,11 +136,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapPost("/managers/{id}/call", (int id) =>
+            routeBuilder.MapPost("/managers/{id}/call", async (int id) =>
             {
                 try
                 {
-                    repository.ApplyCallProcessing(id);
+                    await repository.ApplyCallProcessing(id);
 
                     return Results.Ok(new { message = $"Manager {id} processed call successfully." });
                 }
@@ -154,11 +154,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapPut("/managers/{id}", (int id, Manager manager) =>
+            routeBuilder.MapPut("/managers/{id}", async (int id, Manager manager) =>
             {
                 try
                 {
-                    repository.UpdateManager(id, manager);
+                    await repository.UpdateManager(id, manager);
 
                     return Results.Accepted($"/managers/{id}", new { Message = $"Manager {id} updated successfully." });
                 }
@@ -172,11 +172,11 @@ namespace Employment.WebAPI
                 }
             });
 
-            routeBuilder.MapDelete("/managers/{id}", (int id) =>
+            routeBuilder.MapDelete("/managers/{id}", async (int id) =>
             {
                 try
                 {
-                    repository.DeleteManager(id);
+                    await repository.DeleteManager(id);
 
                     return Results.Accepted($"/managers/{id}", new { Message = $"Manager {id} deleted successfully." });
                 }
