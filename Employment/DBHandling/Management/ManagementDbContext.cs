@@ -1,10 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Collections.Generic;
+using Employment.Models.Management;
 
 namespace Employment.DBHandling.Management
 {
     /// <summary>
-    /// Represents a database context for managers employees.
+    /// Represents a database context for managers.
     /// </summary>
     public class ManagementDbContext : DbContext
     {
@@ -15,15 +18,17 @@ namespace Employment.DBHandling.Management
         /// <summary>
         /// Gets or sets the managers in the database.
         /// </summary>
-        public DbSet<Models.Management.Manager> Managers { get; set; }
+        public DbSet<Manager> Managers { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmploymentContext"/> class.
+        /// Initializes a new instance of the <see cref="ManagementDbContext"/> class.
         /// </summary>
         public ManagementDbContext(IConfiguration configuration)
         {
             _configuration = configuration;
             Database.EnsureCreated();
+
+            Managers = Set<Manager>();
         }
 
         /// <summary>

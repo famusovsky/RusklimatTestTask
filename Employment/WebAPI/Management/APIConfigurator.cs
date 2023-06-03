@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
-using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Employment.DBHandling.Management;
 using Employment.Models.Management;
 
@@ -15,36 +15,72 @@ namespace Employment.WebAPI.Management
         /// Configures the API endpoints for the Management module.
         /// </summary>
         /// <param name="routeBuilder">The route builder.</param>
-        /// <param name="context">The database context.</param>
-        public static void Configure(IEndpointRouteBuilder routeBuilder, ManagementDbContext context)
+        /// <param name="repository">The database repository.</param>
+        public static void Configure(IEndpointRouteBuilder routeBuilder, IManagementRepository repository)
         {
             routeBuilder.MapGet("/", () => new { Message = "Hello, World!" });
 
-            ConfigureManagersCRUD(routeBuilder, context);
+            ConfigureManagersCRUD(routeBuilder, repository);
         }
 
         /// <summary>
-        /// Configures the API endpoints for the CRUD operations on the Managers table.
+        /// Configures the API endpoints for the CRUD operations on the managers repository.
         /// </summary>
         /// <param name="routeBuilder">The route builder.</param>
-        /// <param name="context">The database context.</param>
-        public static void ConfigureManagersCRUD(IEndpointRouteBuilder routeBuilder, ManagementDbContext context)
+        /// <param name="repository">The managers repository.</param>
+        public static void ConfigureManagersCRUD(IEndpointRouteBuilder routeBuilder, IManagementRepository repository)
         {
-            routeBuilder.MapGet("/managers", () => context.Managers.ToList());
+            routeBuilder.MapGet("/managers", () =>
+            {
+                try
+                {
+                    var managers = repository.GetManagers();
 
-            routeBuilder.MapGet("/managers/{id}", (uint id) => context.Managers.Find(id));
+                    return Results.Json(managers);
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
+                }
+                catch (System.Exception e)
+                {
+                    return Results.BadRequest(new { message = e.Message });
+                }
+            });
+
+            routeBuilder.MapGet("/managers/{id}", (uint id) =>
+            {
+                try
+                {
+                    var manager = repository.GetManager(id);
+
+                    return Results.Json(manager);
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
+                }
+                catch (System.Exception e)
+                {
+                    return Results.BadRequest(new { message = e.Message });
+                }
+            });
 
             routeBuilder.MapPost("/managers", (Manager manager) =>
             {
                 try
                 {
-                    context.Managers.Add(manager);
-                    context.SaveChanges();
-                    return new { Message = $"Manager {manager.Id} added successfully." };
+                    repository.AddManager(manager);
+
+                    return Results.Created($"/managers/{manager.Id}", new { Message = $"Manager {manager.Id} created successfully." });
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.Conflict(new { message = e.Message });
                 }
                 catch (System.Exception e)
                 {
-                    return new { Message = e.Message };
+                    return Results.BadRequest(new { message = e.Message });
                 }
             });
 
@@ -52,17 +88,17 @@ namespace Employment.WebAPI.Management
             {
                 try
                 {
-                    var managerToUpdate = context.Managers.Find(id);
-                    managerToUpdate.Name = manager.Name;
-                    managerToUpdate.Salary = manager.Salary;
-                    managerToUpdate.ProcessedCallsCount = manager.ProcessedCallsCount;
-                    context.SaveChanges();
+                    repository.UpdateManager(id, manager);
 
-                    return new { Message = $"Manager {managerToUpdate.Id} updated successfully." };
+                    return Results.Accepted($"/managers/{id}", new { Message = $"Manager {id} updated successfully." });
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
                 }
                 catch (System.Exception e)
                 {
-                    return new { Message = e.Message };
+                    return Results.BadRequest(new { message = e.Message });
                 }
             });
 
@@ -70,14 +106,17 @@ namespace Employment.WebAPI.Management
             {
                 try
                 {
-                    var managerToDelete = context.Managers.Find(id);
-                    context.Managers.Remove(managerToDelete);
-                    context.SaveChanges();
-                    return new { Message = $"Manager {managerToDelete.Id} deleted successfully." };
+                    repository.DeleteManager(id);
+
+                    return Results.Accepted($"/managers/{id}", new { Message = $"Manager {id} deleted successfully." });
+                }
+                catch (System.ArgumentException e)
+                {
+                    return Results.NotFound(new { message = e.Message });
                 }
                 catch (System.Exception e)
                 {
-                    return new { Message = e.Message };
+                    return Results.BadRequest(new { message = e.Message });
                 }
             });
         }
