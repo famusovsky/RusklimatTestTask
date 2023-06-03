@@ -1,33 +1,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Employment.Models;
-using Employment.Models.Management;
 
-namespace Employment.DBHandling.Management
+namespace Employment.DBHandling
 {
     /// <summary>
-    /// Represents a database context for managers.
+    /// Represents a database context for premiums.
     /// </summary>
-    public class ManagementDbContext : DbContext
+    public class PremiumsDbContext : DbContext
     {
         /// <summary>
         /// The configuration.
         /// </summary>
         private readonly IConfiguration _configuration;
-        /// <summary>
-        /// Gets or sets the managers in the database.
-        /// </summary>
-        public DbSet<Manager> Managers { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ManagementDbContext"/> class.
+        /// Gets or sets the premiums in the database.
         /// </summary>
-        public ManagementDbContext(IConfiguration configuration)
+        public DbSet<Premium> Premiums { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PremiumsDbContext"/> class.
+        /// </summary>
+        public PremiumsDbContext(IConfiguration configuration)
         {
             _configuration = configuration;
             Database.EnsureCreated();
 
-            Managers = Set<Manager>();
+            Premiums = Set<Premium>();
         }
 
         /// <summary>

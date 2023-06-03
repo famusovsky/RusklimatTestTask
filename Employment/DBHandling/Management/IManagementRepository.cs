@@ -20,15 +20,16 @@ namespace Employment.DBHandling.Management
         public Manager GetManager(uint id);
 
         /// <summary>
-        /// Adds a manager by id.
+        /// Adds a manager.
         /// </summary>
-        /// <param name="id">The id of the manager to add.</param>
+        /// <param name="manager">The manager to add.</param>
         public void AddManager(Manager manager);
 
         /// <summary>
         /// Updates a manager by id.
         /// </summary>
         /// <param name="id">The id of the manager to update.</param>
+        /// <param name="manager">The updated manager.</param>
         public void UpdateManager(uint id, Manager manager);
 
         /// <summary>

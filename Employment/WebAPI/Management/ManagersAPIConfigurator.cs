@@ -7,12 +7,12 @@ using Employment.Models.Management;
 namespace Employment.WebAPI.Management
 {
     /// <summary>
-    /// This class is responsible for configuring the API endpoints for the Management module.
+    /// This class is responsible for configuring the API endpoints for the Managers module ("*/managers").
     /// </summary>
-    public static class APIConfigurator
+    public static class ManagersAPIConfigurator
     {
         /// <summary>
-        /// Configures the API endpoints for the Management module.
+        /// Configures the API endpoints for the Management module ("*/managers")
         /// </summary>
         /// <param name="routeBuilder">The route builder.</param>
         /// <param name="repository">The database repository.</param>

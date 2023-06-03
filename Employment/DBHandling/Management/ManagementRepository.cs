@@ -30,7 +30,7 @@ namespace Employment.DBHandling.Management
                 throw new System.ArgumentException("No managers found.");
             }
             
-            return _context.Managers.ToList();
+            return managers;
         }
 
         public Manager GetManager(uint id)

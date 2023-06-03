@@ -8,17 +8,17 @@ namespace Employment.Models
         /// <summary>
         /// Represents Id of the employee.
         /// </summary>
-        public uint Id { get; init; }
+        public required uint Id { get; init; }
 
         /// <summary>
         /// Represents name of the employee.
         /// </summary>
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
         /// <summary>
         /// Represents salary of the employee.
         /// </summary>
-        public uint Salary { get; set; }
+        public required uint Salary { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Employee"/> class.
@@ -38,11 +38,5 @@ namespace Employment.Models
         /// </summary>
         /// <param name="bonus">Bonus category.</param>
         public abstract void ApplyBonus(BonusCategory bonus);
-
-        /// <summary>
-        /// Apply premium to the employee.
-        /// </summary>
-        /// <param name="premium">Premium amount.</param>
-        public abstract void ApplyPremium(uint premium);
     }
 }

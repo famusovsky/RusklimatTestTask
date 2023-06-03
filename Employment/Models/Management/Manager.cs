@@ -8,7 +8,7 @@ namespace Employment.Models.Management
         /// <summary>
         /// Represents count of processed calls.
         /// </summary>
-        public uint ProcessedCallsCount { get; set; } = 0;
+        public required uint ProcessedCallsCount { get; set; } = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Manager"/> class.
@@ -62,11 +62,6 @@ namespace Employment.Models.Management
                     Salary += 300;
                     break;
             }
-        }
-
-        public override void ApplyPremium(uint premium)
-        {
-            // TODO
         }
     }
 }
