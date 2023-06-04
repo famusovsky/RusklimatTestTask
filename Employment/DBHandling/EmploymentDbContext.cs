@@ -24,6 +24,11 @@ namespace Employment.DBHandling
         public DbSet<Premium> Premiums { get; set; }
 
         /// <summary>
+        /// Gets or sets the processed calls records in the database.
+        /// </summary>
+        public DbSet<ProcessedCallsRecord> ProcessedCalls { get; set; }
+
+        /// <summary>
         /// Gets or sets the bonuses in the database.
         /// </summary>
         public DbSet<Bonus> Bonuses { get; set; }
@@ -38,6 +43,7 @@ namespace Employment.DBHandling
 
             Managers = Set<Manager>();
             Premiums = Set<Premium>();
+            ProcessedCalls = Set<ProcessedCallsRecord>();
             Bonuses = Set<Bonus>();
         }
 

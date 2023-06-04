@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Employment.Models;
+using System;
 
 namespace Employment.DBHandling.Repositories
 {
@@ -35,7 +36,7 @@ namespace Employment.DBHandling.Repositories
             return managers;
         }
 
-        public async Task<Manager> GetManager(int id)
+        public async Task<Manager> GetManager(uint id)
         {
             var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
@@ -62,7 +63,7 @@ namespace Employment.DBHandling.Repositories
         }
 
         // TODO: update not all of the manager's properties, but only needed
-        public async Task UpdateManager(int id, Manager manager)
+        public async Task UpdateManager(uint id, Manager manager)
         {
             var managerToUpdate = await _context.Managers.FindAsync(id);
             if (managerToUpdate == null)
@@ -72,11 +73,10 @@ namespace Employment.DBHandling.Repositories
 
             managerToUpdate.Name = manager.Name;
             managerToUpdate.Salary = manager.Salary;
-            managerToUpdate.ProcessedCallsCount = manager.ProcessedCallsCount;
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteManager(int id)
+        public async Task DeleteManager(uint id)
         {
             var managerToDelete = await _context.Managers.FindAsync(id);
             if (managerToDelete == null)
@@ -88,7 +88,7 @@ namespace Employment.DBHandling.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<uint> GetManagerSalary(int id)
+        public async Task<uint> GetManagerSalary(uint id)
         {
             var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
@@ -96,10 +96,17 @@ namespace Employment.DBHandling.Repositories
                 throw new System.ArgumentException($"Manager with id {id} not found.");
             }
 
-            return manager.Salary;
+            // TODO: fix this
+            var defaultSalary = manager.Salary;
+            var bonuses = await _context.Bonuses.Where(bonus => bonus.EmployeeId == id).ToListAsync();
+            foreach (var bonus in bonuses)
+            {
+                defaultSalary += ((uint)bonus.Category);
+            }
+            return defaultSalary;
         }
 
-        public async Task ApplyCallProcessing(int id)
+        public async Task ApplyCallProcessing(uint id, uint count, DateOnly date)
         {
             var manager = await _context.Managers.FindAsync(id);
             if (manager == null)
@@ -107,14 +114,43 @@ namespace Employment.DBHandling.Repositories
                 throw new System.ArgumentException($"Manager with id {id} not found.");
             }
 
-            var bonus = await manager.ProcessCallAsync();
-            await _context.Bonuses.AddAsync(bonus);
+            var forCurrentMonth = await _context.ProcessedCalls.Where(processedCall => processedCall.EmployeeId == id && processedCall.Date.Month == date.Month).ToListAsync();
+            uint countForCurrentMonth = (uint)forCurrentMonth.Count;
+            for (int i = 0; i < count; i++)
+            {
+                countForCurrentMonth++;
+                var bonusCategory = Manager.GetBonusCategory(countForCurrentMonth);
+                var bonus = new Bonus
+                {
+                    EmployeeId = id,
+                    Category = bonusCategory
+                };
+                await _context.Bonuses.AddAsync(bonus);
+            }
+
+            var processedCallsOld = await _context.ProcessedCalls.FirstOrDefaultAsync(processedCall => processedCall.EmployeeId == id && processedCall.Date == date);
+            if (processedCallsOld != null)
+            {
+                processedCallsOld.Count += count;
+            }
+            else
+            {
+                var processedCallsNew = new ProcessedCallsRecord
+                {
+                    EmployeeId = id,
+                    Count = count,
+                    Date = date
+                };
+                await _context.ProcessedCalls.AddAsync(processedCallsNew);
+            }
+
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Bonus>> GetBonusesHistory()
+        public async Task<List<Bonus>> GetBonusesHistory(DateOnly from, DateOnly to)
         {
-            var bonuses = await _context.Bonuses.ToListAsync();
+            var allBonuses = await _context.Bonuses.ToListAsync();
+            var bonuses = allBonuses.Where(bonus => bonus.CreationDate >= from && bonus.CreationDate <= to).ToList();
             if (bonuses.Count == 0)
             {
                 throw new System.ArgumentException("No bonuses found.");
@@ -123,9 +159,9 @@ namespace Employment.DBHandling.Repositories
             return bonuses;
         }
 
-        public async Task<List<Bonus>> GetBonusesHistory(int id)
+        public async Task<List<Bonus>> GetBonusesHistory(uint id, DateOnly from, DateOnly to)
         {
-            var allBonuses = await _context.Bonuses.ToListAsync();
+            var allBonuses = await GetBonusesHistory(from, to);
             var bonuses = allBonuses.Where(bonus => bonus.EmployeeId == id).ToList();
             if (bonuses.Count == 0)
             {
@@ -133,6 +169,43 @@ namespace Employment.DBHandling.Repositories
             }
 
             return bonuses;
+        }
+
+        public async Task<List<ProcessedCallsRecord>> GetProcessedCallsHistory(DateOnly from, DateOnly to)
+        {
+            var allProcessedCalls = await _context.ProcessedCalls.ToListAsync();
+            var processedCalls = allProcessedCalls.Where(processedCall => processedCall.Date >= from && processedCall.Date <= to).ToList();
+            if (processedCalls.Count == 0)
+            {
+                throw new System.ArgumentException("No processed calls found.");
+            }
+
+            return processedCalls;
+        }
+
+        public async Task<List<ProcessedCallsRecord>> GetProcessedCallsHistory(uint id, DateOnly from, DateOnly to)
+        {
+            var allProcessedCalls = await GetProcessedCallsHistory(from, to);
+            var processedCalls = allProcessedCalls.Where(processedCall => processedCall.EmployeeId == id).ToList();
+            if (processedCalls.Count == 0)
+            {
+                throw new System.ArgumentException("No processed calls found.");
+            }
+
+            return processedCalls;
+        }
+
+        public async Task<uint> GetCountOfProcessedCalls(uint id, System.DateOnly from, System.DateOnly to)
+        {
+            var processedCalls = await GetProcessedCallsHistory(id, from, to);
+            uint count = 0;
+
+            foreach (var processedCall in processedCalls)
+            {
+                count += processedCall.Count;
+            }
+
+            return count;
         }
     }
 }

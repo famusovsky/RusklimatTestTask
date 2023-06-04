@@ -4,9 +4,6 @@ using Employment.DBHandling.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-// For normal conversion of DateTime to TIMESTAMP WITHOUT TIME ZONE
-AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add Db context and repositories to the container.

@@ -10,7 +10,7 @@ namespace Employment.Models
         /// <summary>
         /// Gets or sets the Id of the bonus.
         /// </summary>
-        public int Id { get; init; }
+        public uint Id { get; init; }
         /// <summary>
         /// Gets or sets the Id of the employee who received the bonus.
         /// </summary>
@@ -24,6 +24,6 @@ namespace Employment.Models
         /// <summary>
         /// Gets or sets the creation date of the bonus.
         /// </summary>
-        public DateTime CreationDate { get; private init; } = DateTime.Now;
+        public DateOnly CreationDate { get; private init; } = DateOnly.FromDateTime(DateTime.Now);
     }
 }

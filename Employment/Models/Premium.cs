@@ -10,7 +10,7 @@ namespace Employment.Models
         /// <summary>
         /// Represents id of the premium.
         /// </summary>
-        public int Id { get; init; } = 0;
+        public uint Id { get; init; } = 0;
 
         /// <summary>
         /// Represents date of the premium.

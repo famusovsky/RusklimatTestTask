@@ -5,8 +5,8 @@ namespace Employment.Models
     /// </summary>
     public enum BonusCategory
     {
-        Low,
-        Medium,
-        High
+        Low = 100,
+        Medium = 200,
+        High = 300
     }
 }
