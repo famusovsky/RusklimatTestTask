@@ -10,7 +10,7 @@ namespace Employment.Controllers
     /// This class represents the Premiums module's API endpoints.
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("premiums")]
     public class PremiumsController : ControllerBase
     {
         private readonly IPremiumsRepository _repository;

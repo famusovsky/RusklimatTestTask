@@ -10,7 +10,7 @@ namespace Employment.Controllers
     /// This class is responsible for configuring the API endpoints for the Managers module ("*/managers").
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("managers")]
     public class ManagersController : ControllerBase
     {
         private readonly IManagementRepository _repository;
