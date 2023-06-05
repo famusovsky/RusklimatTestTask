@@ -72,7 +72,7 @@ namespace Employment.DBHandling.Repositories
             }
 
             managerToUpdate.Name = manager.Name;
-            managerToUpdate.Salary = manager.Salary;
+            managerToUpdate.DefaultSalary = manager.DefaultSalary;
             await _context.SaveChangesAsync();
         }
 
@@ -96,8 +96,7 @@ namespace Employment.DBHandling.Repositories
                 throw new System.ArgumentException($"Manager with id {id} not found.");
             }
 
-            // TODO: fix this
-            var defaultSalary = manager.Salary;
+            var defaultSalary = manager.DefaultSalary;
             var bonuses = await _context.Bonuses.Where(bonus => bonus.EmployeeId == id).ToListAsync();
             foreach (var bonus in bonuses)
             {

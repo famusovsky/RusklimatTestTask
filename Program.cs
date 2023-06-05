@@ -1,4 +1,3 @@
-using System;
 using Employment.DBHandling;
 using Employment.DBHandling.Repositories;
 using Microsoft.AspNetCore.Builder;

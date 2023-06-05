@@ -10,12 +10,12 @@ namespace Employment.Models
         /// <summary>
         /// Represents id of the premium.
         /// </summary>
-        public uint Id { get; init; } = 0;
+        public uint Id { get; private init; }
 
         /// <summary>
         /// Represents date of the premium.
         /// </summary>
-        public DateTime CreationDate { get; init; } = DateTime.Now;
+        public DateOnly CreationDate { get; init; } = DateOnly.FromDateTime(DateTime.Now);
 
         /// <summary>
         /// Represents id of the employee who got the premium.

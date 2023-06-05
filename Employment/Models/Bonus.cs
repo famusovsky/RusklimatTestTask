@@ -10,7 +10,7 @@ namespace Employment.Models
         /// <summary>
         /// Gets or sets the Id of the bonus.
         /// </summary>
-        public uint Id { get; init; }
+        public uint Id { get; private init; }
         /// <summary>
         /// Gets or sets the Id of the employee who received the bonus.
         /// </summary>

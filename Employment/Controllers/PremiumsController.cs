@@ -117,7 +117,7 @@ namespace Employment.Controllers
             }
         }
 
-        // TODO: not just change all fields, but only the ones that are passed in
+        // TODO: update not all of the manager's properties, but only needed
         /// <summary>
         /// Updates a premium.
         /// </summary>

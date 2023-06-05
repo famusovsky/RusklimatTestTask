@@ -10,7 +10,7 @@ namespace Employment.Models
         /// <summary>
         /// Represents id of the processed calls record.
         /// </summary>
-        public int Id { get; init; } = 0;
+        public int Id { get; private init; }
 
         /// <summary>
         /// Represents date of processed calls record.
