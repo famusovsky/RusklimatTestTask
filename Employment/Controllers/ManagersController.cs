@@ -368,6 +368,11 @@ namespace Employment.Controllers
             }
         }
 
+        /// <summary>
+        /// Checks if the given dates are valid and if not, sets them to the default values.
+        /// </summary>
+        /// <param name="from">The date to start the history from.</param>
+        /// <param name="to">The date to end the history at.</param>
         private void checkDates(ref DateOnly from, ref DateOnly to)
         {
             if (from == new DateOnly())
